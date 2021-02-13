@@ -1,21 +1,83 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Leon.XXX.Domain.XXX.Service;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MQMiddleware;
+using MQMiddleware.Configuration;
 using NetPro.Core.Infrastructure;
+using NetPro.Sign;
+using NetPro.TypeFinder;
+using RabbitMQ.Client;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Leon.XXX.Api
 {
-	public class ApiStartup : INetProStartup
-	{
-		public int Order => 900;
+    public class ApiStartup : INetProStartup
+    {
+        public int Order => 900;
+        public static IFreeSql Fsql { get; private set; }
 
-		public void ConfigureServices(IServiceCollection services, IConfiguration configuration = null, ITypeFinder typeFinder = null)
-		{
+        public void ConfigureServices(IServiceCollection services, IConfiguration configuration = null, ITypeFinder typeFinder = null)
+        {
+            services.Scan(scan => scan
+              .FromAssemblies(typeFinder.GetAssemblies().Where(s =>
+                    s.GetName().Name.EndsWith("Leon.XXX.Domain")).ToArray())
+              .AddClasses(classes => classes.Where(type => type.Name.EndsWith("Repository")))
+              .AsImplementedInterfaces()
+              .WithScopedLifetime());
 
-		}
+            var option = configuration.GetSection(nameof(VerifySignOption)).Get<VerifySignOption>();
 
-		public void Configure(IApplicationBuilder application)
-		{	           
+            //覆盖请求签名组件
+            services.AddVerifySign(s =>
+             {
+                 //自定义签名摘要逻辑
+                 s.OperationFilter<VerifySignCustomer>();
+             });
+
+            var connectionString = configuration.GetValue<string>("ConnectionStrings:MysqlConnection");
+            Fsql = new FreeSql.FreeSqlBuilder()
+            .UseConnectionString(FreeSql.DataType.MySql, connectionString)
+            .UseAutoSyncStructure(false) //自动同步实体结构到数据库
+            .Build(); //请务必定义成 Singleton 单例模式
+            services.AddSingleton<IFreeSql>(Fsql);
+
+            services.AddFreeRepository(null,
+           this.GetType().Assembly);//批量注入Repository
+
+            services.AddRabbitMqClient(new RabbitMqClientOptions
+            {
+                HostName = "198.89.70.56",
+                Port = 5672,
+                Password = "guest",
+                UserName = "guest",
+                VirtualHost = "/",
+            })
+                .AddProductionExchange("exchange", new RabbitMqExchangeOptions
+                {
+                    DeadLetterExchange = "DeadExchange",
+                    AutoDelete = false,
+                    Type = ExchangeType.Direct,
+                    Durable = true,
+                    Queues = new List<RabbitMqQueueOptions> {
+                       new RabbitMqQueueOptions { AutoDelete = false, Exclusive = false, Durable = true, Name = "exchange" , RoutingKeys = new HashSet<string> { string.Empty } } }
+                })
+                .AddConsumptionExchange($"exchange", new RabbitMqExchangeOptions
+                {
+                    DeadLetterExchange = "DeadExchange",
+                    AutoDelete = false,
+                    Type = ExchangeType.Direct,
+                    Durable = true,
+                    Queues = new List<RabbitMqQueueOptions> { new RabbitMqQueueOptions { AutoDelete = false, Exclusive = false, Durable = true, Name= "exchange", RoutingKeys = new HashSet<string> { string.Empty } } }
+                })
+                .AddMessageHandlerSingleton<CustomerMessageHandler>(string.Empty);
+
+            services.BuildServiceProvider().GetRequiredService<IQueueService>().StartConsuming();
         }
-	}
+
+        public void Configure(IApplicationBuilder application)
+        {
+        }
+    }
 }

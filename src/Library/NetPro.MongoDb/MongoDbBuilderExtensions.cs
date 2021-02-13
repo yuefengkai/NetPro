@@ -1,8 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NetPro.MongoDb
 {
@@ -17,6 +16,15 @@ namespace NetPro.MongoDb
         public static IServiceCollection AddMongoDb(this IServiceCollection services, Action<MongoDbOptions> optionsAction)
         {
             services.Configure(optionsAction);
+            services.TryAddScoped<IMongoDbContext, MongoDbContext>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddMongoDb(this IServiceCollection services, IConfiguration configuration)
+        {
+            var option = configuration.GetSection(nameof(MongoDbOptions)).Get<MongoDbOptions>();
+            services.TryAddSingleton(option);
             services.TryAddScoped<IMongoDbContext, MongoDbContext>();
 
             return services;

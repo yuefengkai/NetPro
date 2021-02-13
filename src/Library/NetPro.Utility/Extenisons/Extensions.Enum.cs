@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace NetPro.Core
 {
@@ -73,7 +72,7 @@ namespace NetPro.Core
         {
             var type = typeof(TEnum);
             var fields = type.GetFields(BindingFlags.Public | BindingFlags.Static)
-                             .Where(predict == null? f=> true : predict);
+                             .Where(predict == null ? f => true : predict);
             foreach (var f in fields)
             {
                 var attrs = f.GetCustomAttributes(typeof(TAttr), false).FirstOrDefault() as TAttr;
@@ -90,11 +89,6 @@ namespace NetPro.Core
         {
             return GetDescriptions<TEnum>().ToDictionary(d => Convert.ToInt32(d.Key), d => d.Value);
         }
-        /// <summary>
-        /// 自定义的一个属性类
-        /// 目的：增加多个特性描述
-        /// </summary>
-
     }
 
 
@@ -128,7 +122,7 @@ namespace NetPro.Core
         /// <summary>
         /// 得到 值，和对应值得描述
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TEnum"></typeparam>
         /// <returns></returns>
         public static Dictionary<int, string> GetDescriptionValues<TEnum>() where TEnum : struct, IComparable, IConvertible, IFormattable
         {

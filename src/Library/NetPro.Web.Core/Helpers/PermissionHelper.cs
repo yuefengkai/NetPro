@@ -1,8 +1,6 @@
 ﻿using NetPro.Core.Configuration;
 using NetPro.Core.Infrastructure;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 
 namespace NetPro.Web.Core.Helpers
@@ -10,7 +8,7 @@ namespace NetPro.Web.Core.Helpers
     /// <summary>
     /// 权限辅助类
     /// </summary>
-   public class PermissionHelper
+    public class PermissionHelper
     {
         /// <summary>
         /// 用户权限判断.判断action权限
@@ -23,16 +21,16 @@ namespace NetPro.Web.Core.Helpers
         public static bool HasPermission(long userId, string controllerName, string actionName, string roleName = "")
         {
             return true;
-            if (userId <= 0 || string.IsNullOrWhiteSpace(controllerName) || string.IsNullOrWhiteSpace(actionName))
-            {
-                return false;
-            }
-            if (IsSuperRole(roleName))
-            {
-                return true;
-            }
-            //TODO 根据controllerName,actionName判断该用户是否有权限
-            return true;
+            //if (userId <= 0 || string.IsNullOrWhiteSpace(controllerName) || string.IsNullOrWhiteSpace(actionName))
+            //{
+            //    return false;
+            //}
+            //if (IsSuperRole(roleName))
+            //{
+            //    return true;
+            //}
+            ////TODO 根据controllerName,actionName判断该用户是否有权限
+            //return true;
         }
 
         /// <summary>
@@ -62,9 +60,9 @@ namespace NetPro.Web.Core.Helpers
         /// <param name="accessCode">权限编号(功能编号)</param>
         /// <param name="roleName">角色名称</param>
         /// <returns></returns>
-        public static bool HasPermission(long userId,string accessCode,string roleName = "")
+        public static bool HasPermission(long userId, string accessCode, string roleName = "")
         {
-            if (userId <= 0||string.IsNullOrWhiteSpace(accessCode))
+            if (userId <= 0 || string.IsNullOrWhiteSpace(accessCode))
             {
                 return false;
             }

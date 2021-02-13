@@ -1,12 +1,9 @@
-using NetPro.Core;
 using NetPro.Core.Infrastructure.Mapper;
 using NetPro.Utility;
 using NetPro.Web.Core.Models;
-using Microsoft.EntityFrameworkCore;
+using NetPro.Web.Core.PagedList;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace NetPro.Web.Core
 {
@@ -42,7 +39,7 @@ namespace NetPro.Web.Core
         /// <summary>
         ///  类型映射 Domain To ViewModel
         /// </summary>
-        public static D ToModel<S,D>(this S entity)
+        public static D ToModel<S, D>(this S entity)
         {
             if (entity == null)
                 return default(D);
@@ -53,7 +50,7 @@ namespace NetPro.Web.Core
         /// <summary>
         /// 集合列表类型映射 Domain To ViewModel
         /// </summary>
-        public static List<D> ToModels<S,D>(this IEnumerable<S> entities)
+        public static List<D> ToModels<S, D>(this IEnumerable<S> entities)
         {
             if (entities == null) return null;
             try
@@ -64,7 +61,7 @@ namespace NetPro.Web.Core
             {
                 throw new NetProException("数据Model转换错误", ex);
             }
-            
+
         }
 
         #endregion
@@ -74,7 +71,7 @@ namespace NetPro.Web.Core
         /// <summary>
         ///  类型映射 viewmodel to Domain
         /// </summary>
-        public static T ToDomain<T>(this BaseViewModel entity)
+        public static T ToDomain<T>(this BaseDto entity)
         {
             if (entity == null)
                 return default(T);
@@ -86,7 +83,7 @@ namespace NetPro.Web.Core
         /// model => Domains
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<T> ToDomains<T>(this IEnumerable<BaseViewModel> models)
+        public static IEnumerable<T> ToDomains<T>(this IEnumerable<BaseDto> models)
         {
             return AutoMapperConfiguration.Mapper.Map<ICollection<T>>(models);
         }
@@ -113,12 +110,12 @@ namespace NetPro.Web.Core
         /// <typeparam name="D">api返回对象</typeparam>
         /// <param name="data">wcf服务返回数据</param>
         /// <returns>api需要的对象</returns>
-        public static PagedListModel<D> ToModel<S, D>(this IPagedList<S> data) 
+        public static PagedListModel<D> ToModel<S, D>(this IPagedList<S> data)
         {
             if (data == null)
                 throw new NetProException("对象不能为空");
-            
-            return new PagedListModel<D>(data.Items.ToModels<S,D>(), data.PageIndex, data.PageSize, data.TotalCount, data.TotalPages);
+
+            return new PagedListModel<D>(data.Items.ToModels<S, D>(), data.PageIndex, data.PageSize, data.TotalCount, data.TotalPages);
         }
     }
 }

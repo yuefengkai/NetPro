@@ -1,7 +1,5 @@
 ﻿using App.Metrics.Health;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,9 +8,9 @@ namespace NetPro.Web.Core.HealthChecks
     /// <summary>
     /// 数据库健康检查
     /// </summary>
-   public class DBHealthCheck : HealthCheck
+    public class DBHealthCheck : HealthCheck
     {
-        public DBHealthCheck() : base("自定义健康检测")
+        public DBHealthCheck() : base("Custom health checks")
         {
 
         }

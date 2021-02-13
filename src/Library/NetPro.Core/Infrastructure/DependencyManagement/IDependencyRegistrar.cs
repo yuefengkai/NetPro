@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using NetPro.Core.Configuration;
-using Microsoft.Extensions.Configuration;
+using NetPro.TypeFinder;
 
 namespace NetPro.Core.Infrastructure.DependencyManagement
 {
@@ -15,7 +15,6 @@ namespace NetPro.Core.Infrastructure.DependencyManagement
         /// <param name="builder">ContainerBuilder对象</param>
         /// <param name="typeFinder">类型查找器 </param>
         /// <param name="config">配置参数</param>
-        /// <param name="configuration"></param>
         void Register(ContainerBuilder builder, ITypeFinder typeFinder, NetProOption config);
 
         /// <summary>

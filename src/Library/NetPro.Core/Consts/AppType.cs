@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NetPro.Core.Consts
+﻿namespace NetPro.Core.Consts
 {
     /// <summary>
     /// 应用程序类型
@@ -12,10 +8,10 @@ namespace NetPro.Core.Consts
         /// <summary>
         /// api
         /// </summary>
-        Api=1,
+        Api = 1,
         /// <summary>
         /// mvc
         /// </summary>
-        Mvc=2,
+        Mvc = 2,
     }
 }

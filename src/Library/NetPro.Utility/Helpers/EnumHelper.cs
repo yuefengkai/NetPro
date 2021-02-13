@@ -5,24 +5,28 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 
-namespace NetPro.Utility.Helpers {
+namespace NetPro.Utility.Helpers
+{
     /// <summary>
     /// 枚举操作
     /// </summary>
-    public static class EnumHelper {
+    public static class EnumHelper
+    {
         /// <summary>
         /// 获取实例
         /// </summary>
         /// <typeparam name="TEnum">枚举类型</typeparam>
         /// <param name="member">成员名或值,范例:Enum1枚举有成员A=0,则传入"A"或"0"获取 Enum1.A</param>
-        public static TEnum Parse<TEnum>( object member ) {
+        public static TEnum Parse<TEnum>(object member)
+        {
             string value = member.SafeString();
-            if( string.IsNullOrWhiteSpace( value ) ) {
-                if( typeof( TEnum ).IsGenericType )
-                    return default( TEnum );
-                throw new ArgumentNullException( nameof( member ) );
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                if (typeof(TEnum).IsGenericType)
+                    return default(TEnum);
+                throw new ArgumentNullException(nameof(member));
             }
-            return (TEnum)System.Enum.Parse( CommonHelper.GetType<TEnum>(), value, true );
+            return (TEnum)Enum.Parse(CommonHelper.GetType<TEnum>(), value, true);
         }
 
         /// <summary>
@@ -30,8 +34,9 @@ namespace NetPro.Utility.Helpers {
         /// </summary>
         /// <typeparam name="TEnum">枚举类型</typeparam>
         /// <param name="member">成员名、值、实例均可,范例:Enum1枚举有成员A=0,则传入Enum1.A或0,获取成员名"A"</param>
-        public static string GetName<TEnum>( object member ) {
-            return GetName( CommonHelper.GetType<TEnum>(), member );
+        public static string GetName<TEnum>(object member)
+        {
+            return GetName(CommonHelper.GetType<TEnum>(), member);
         }
 
         /// <summary>
@@ -39,16 +44,17 @@ namespace NetPro.Utility.Helpers {
         /// </summary>
         /// <param name="type">枚举类型</param>
         /// <param name="member">成员名、值、实例均可</param>
-        public static string GetName( Type type, object member ) {
-            if( type == null )
+        public static string GetName(Type type, object member)
+        {
+            if (type == null)
                 return string.Empty;
-            if( member == null )
+            if (member == null)
                 return string.Empty;
-            if( member is string )
+            if (member is string)
                 return member.ToString();
-            if( type.GetTypeInfo().IsEnum == false )
+            if (type.GetTypeInfo().IsEnum == false)
                 return string.Empty;
-            return System.Enum.GetName( type, member );
+            return Enum.GetName(type, member);
         }
 
         /// <summary>
@@ -56,8 +62,9 @@ namespace NetPro.Utility.Helpers {
         /// </summary>
         /// <typeparam name="TEnum">枚举类型</typeparam>
         /// <param name="member">成员名、值、实例均可，范例:Enum1枚举有成员A=0,可传入"A"、0、Enum1.A，获取值0</param>
-        public static int GetValue<TEnum>( object member ) {
-            return GetValue( CommonHelper.GetType<TEnum>(), member );
+        public static int GetValue<TEnum>(object member)
+        {
+            return GetValue(CommonHelper.GetType<TEnum>(), member);
         }
 
         /// <summary>
@@ -65,11 +72,12 @@ namespace NetPro.Utility.Helpers {
         /// </summary>
         /// <param name="type">枚举类型</param>
         /// <param name="member">成员名、值、实例均可</param>
-        public static int GetValue( Type type, object member ) {
+        public static int GetValue(Type type, object member)
+        {
             string value = member.SafeString();
-            if( string.IsNullOrWhiteSpace( value ) )
-                throw new ArgumentNullException( nameof(member) );
-            return (int)System.Enum.Parse( type, member.ToString(), true );
+            if (string.IsNullOrWhiteSpace(value))
+                throw new ArgumentNullException(nameof(member));
+            return (int)Enum.Parse(type, member.ToString(), true);
         }
 
         /// <summary>
@@ -77,8 +85,9 @@ namespace NetPro.Utility.Helpers {
         /// </summary>
         /// <typeparam name="TEnum">枚举类型</typeparam>
         /// <param name="member">成员名、值、实例均可</param>
-        public static string GetDescription<TEnum>( object member ) {
-            return ReflectionHelper.GetDescription<TEnum>( GetName<TEnum>( member ) );
+        public static string GetDescription<TEnum>(object member)
+        {
+            return ReflectionHelper.GetDescription<TEnum>(GetName<TEnum>(member));
         }
 
         /// <summary>
@@ -86,8 +95,9 @@ namespace NetPro.Utility.Helpers {
         /// </summary>
         /// <param name="type">枚举类型</param>
         /// <param name="member">成员名、值、实例均可</param>
-        public static string GetDescription( Type type, object member ) {
-            return ReflectionHelper.GetDescription( type, GetName( type, member ) );
+        public static string GetDescription(Type type, object member)
+        {
+            return ReflectionHelper.GetDescription(type, GetName(type, member));
         }
 
         #region 获取枚举Description注释
@@ -99,10 +109,10 @@ namespace NetPro.Utility.Helpers {
         public static string Description(Enum en)
         {
             Type type = en.GetType(); MemberInfo[] memInfo = type.GetMember(en.ToString());
-            if (memInfo != null && memInfo.Length > 0)
+            if (memInfo.Length > 0)
             {
-                object[] attrs = memInfo[0].GetCustomAttributes(typeof(System.ComponentModel.DescriptionAttribute), false);
-                if (attrs != null && attrs.Length > 0)
+                object[] attrs = memInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+                if (attrs.Length > 0)
                     return ((DescriptionAttribute)attrs[0]).Description;
             }
             return en.ToString();
@@ -112,8 +122,9 @@ namespace NetPro.Utility.Helpers {
         /// 获取自定义枚举特性描述（传输描述位置）
         /// </summary>
         /// <param name="enumSubitem"></param>
-        /// <param name="text1"></param>
-        public static void GetSelfAttributeInfo(Enum enumSubitem, out string text, int Pos)
+        /// <param name="text"></param>
+        /// <param name="pos"></param>
+        public static void GetSelfAttributeInfo(Enum enumSubitem, out string text, int pos)
         {
             Object obj = GetAttributeClass(enumSubitem, typeof(SelfAttribute));
             if (obj == null)
@@ -123,9 +134,9 @@ namespace NetPro.Utility.Helpers {
             else
             {
                 SelfAttribute da = (SelfAttribute)obj;
-                if (Pos == 1)
+                if (pos == 1)
                     text = da.DisplayText1;
-                else if (Pos == 2)
+                else if (pos == 2)
                     text = da.DisplayText2;
                 else
                     text = da.DisplayText1;
@@ -193,11 +204,12 @@ namespace NetPro.Utility.Helpers {
             return result;
         }
 
-        // <summary>
+        /// <summary>
         /// 获取指定属性类的实例
         /// </summary>
         /// <param name="enumSubitem">枚举类子项</param>
         /// <param name="attributeType">DescriptionAttribute属性类或其自定义属性类 类型，例如：typeof(DescriptionAttribute)</param>
+        /// <returns></returns>
         private static Object GetAttributeClass(Enum enumSubitem, Type attributeType)
         {
             FieldInfo fieldinfo = enumSubitem.GetType().GetField(enumSubitem.ToString());
@@ -206,7 +218,7 @@ namespace NetPro.Utility.Helpers {
                 return null;
             }
             Object[] objs = fieldinfo.GetCustomAttributes(attributeType, false);
-            if (objs == null || objs.Length == 0)
+            if (objs.Length == 0)
             {
                 return null;
             }

@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 
 namespace NetPro.Dapper.Expressions
 {
     internal class ExpressionUtils
     {
         /// <summary>
-        ///     Makes the predicate.
+        /// Makes the predicate.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="name">The name.</param>

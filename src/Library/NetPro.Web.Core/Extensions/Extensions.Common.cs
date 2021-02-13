@@ -1,19 +1,13 @@
-﻿using NetPro.Core.Consts;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using NetPro.Core.Consts;
 using NetPro.Utility;
 using NetPro.Utility.Helpers;
 using NetPro.Web.Core.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace NetPro.Web.Core
 {
-   public  static partial class Extensions
+    public static partial class Extensions
     {
         /// <summary>
         /// 返回错误的ActionResult
@@ -23,9 +17,9 @@ namespace NetPro.Web.Core
         /// <returns></returns>
         public static JsonResult ToErrorActionResult(this string errorMsg, int errorCode)
         {
-            var model = new ApiResultModel()
+            var model = new ResponseResult()
             {
-                ErrorCode = errorCode,
+                Code = errorCode,
                 Msg = errorMsg
             };
             return new JsonResult(model);
@@ -54,7 +48,7 @@ namespace NetPro.Web.Core
             {
                 throw new NetProException($"{sectionName}值不能为空", AppErrorCode.ArgumentEmpty.Value());
             }
-            return EncryptHelper.DESDecrypt8(value, key);
+            return EncryptHelper.DesDecrypt8(value, key);
         }
     }
 }

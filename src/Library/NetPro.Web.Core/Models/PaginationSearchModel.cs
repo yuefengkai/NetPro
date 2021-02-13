@@ -1,35 +1,30 @@
-﻿using NetPro.Core.Infrastructure;
-using NetPro.Core.Infrastructure.Attributes;
+﻿using FluentValidation;
+using NetPro.Core.Infrastructure;
+using NetPro.Web.Core.PagedList;
 using NetPro.Web.Core.Validators;
-using FluentValidation;
-using FluentValidation.Attributes;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace NetPro.Web.Core.Models
-{              
+{
     /// <summary>
     /// 分页查询请求基类
     /// </summary>
-    [Validator(typeof(PaginationSearchModelValidator))]
     public abstract class PaginationSearchModel : SortSearchModel
     {
-        private int _pageSize ;
+        private int _pageSize;
 
         /// <summary>
         ///页码 从0开始
         /// </summary>
-        [SwaggerDefaultValue(0)]
+        //[SwaggerDefaultValue(0)]
         [Required]
         [Display(Order = 0)]
         public virtual int PageIndex { get; set; }
         /// <summary>
         /// 每页显示数量.小于0则返回所有
         /// </summary>
-        [SwaggerDefaultValue(20)]
+        //[SwaggerDefaultValue(20)]
         [Required]
         [Display(Order = 0)]
         public virtual int PageSize
@@ -82,7 +77,7 @@ namespace NetPro.Web.Core.Models
         /// <summary>
         /// 排序方式 asc 升序，desc降序
         /// </summary>
-        [SwaggerDefaultValue("desc")]
+        //[SwaggerDefaultValue("desc")]
         [Required]
         [Display(Order = -1)]
         public virtual string OrderByType
@@ -102,7 +97,7 @@ namespace NetPro.Web.Core.Models
         /// <summary>
         /// 排序字段
         /// </summary>
-        [SwaggerDefaultValue("id")]
+        //[SwaggerDefaultValue("id")]
         [Required]
         [Display(Order = -2)]
         public virtual string OrderByField { get; set; }

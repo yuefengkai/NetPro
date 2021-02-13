@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Text;
 
 namespace NetPro.Dapper
 {
-    public class UnitOfWork:IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         private IDbTransaction _transaction;
         private readonly Action<UnitOfWork> _onCommit;
         private readonly Action<UnitOfWork> _onRollback;
 
         /// <summary>
-        /// Creates a new <see cref="NewUnitOfWork"/> instance.
+        /// Creates a new instance.
         /// </summary>
         /// <param name="transaction">The underlying <see cref="IDbTransaction"/> object used to either commit or roll back the statements that are being performed inside this unit of work.</param>
         /// <param name="onCommitOrRollback">An <see cref="Action{NewUnitOfWork}"/> that will be executed when the unit of work is being committed or rolled back.</param>
@@ -21,7 +19,7 @@ namespace NetPro.Dapper
         }
 
         /// <summary>
-        /// Creates a new <see cref="NewUnitOfWork"/> instance.
+        /// Creates a new  instance.
         /// </summary>
         /// <param name="transaction">The underlying <see cref="IDbTransaction"/> object used to either commit or roll back the statements that are being performed inside this unit of work.</param>
         /// <param name="onCommit">An <see cref="Action{NewUnitOfWork}"/> that will be executed when the unit of work is being committed.</param>
@@ -71,7 +69,7 @@ namespace NetPro.Dapper
         /// </summary>
         public void Dispose()
         {
-            if (_transaction == null||(_transaction?.Connection==null)) return;
+            if (_transaction == null || (_transaction?.Connection == null)) return;
 
             try
             {
